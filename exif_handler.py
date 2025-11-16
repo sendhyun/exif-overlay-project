@@ -6,6 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 '''
 #222222 검정색
 #444444 흰색
+11-06 최초 git-push
 '''
 logo_dir = os.path.join(os.path.dirname(__file__), "assets", "brands")
 logo_map = {"apple": "apple.png", "samsung": "samsung.png", "sony": "sony.png", "canon": "canon.png", "nikon": "nikon.png"}
