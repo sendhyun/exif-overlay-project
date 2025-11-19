@@ -17,7 +17,7 @@ from tkinter import font
 
 config_file = "config.json"
 #컴퓨터에 이 패키지들이 없다면 설치해야함.
-#https://hwan001.co.kr/119
+#참조 https://hwan001.co.kr/119
 required = {"pillow": "PIL","piexif":"piexif"}
 missing = []
 for pkg,module in required.items():
