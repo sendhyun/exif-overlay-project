@@ -26,7 +26,7 @@ for pkg,module in required.items():
     except ImportError:
         missing.append(pkg)
 if missing:
-    print(f"{', '.join(missing)} 설치 중...")
+    print(f"{', '.join(missing)} 설치")
     subprocess.check_call([sys.executable, "-m", "pip", "install", *missing])
 
 from PIL import Image,ImageTk
