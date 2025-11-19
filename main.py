@@ -12,21 +12,12 @@ import ctypes
 import itertools
 import threading
 from functools import partial
-from tkinter import (
-    Tk,
-    Button,
-    Label,
-    Frame,
-    filedialog,
-    messagebox,
-    StringVar,
-    simpledialog,
-)
-from tkinter import font as tkfont
+from tkinter import Tk,Button,Label,Frame,filedialog,messagebox,StringVar,simpledialog
+from tkinter import font 
 
 config_file = "config.json"
-
 #컴퓨터에 이 패키지들이 없다면 설치해야함.
+#https://hwan001.co.kr/119
 required = {"pillow": "PIL","piexif":"piexif"}
 missing = []
 for pkg,module in required.items():
@@ -35,15 +26,12 @@ for pkg,module in required.items():
     except ImportError:
         missing.append(pkg)
 if missing:
-    print(f"필요한 라이브러리 ({', '.join(missing)}) 설치 중...")
+    print(f"{', '.join(missing)} 설치 중...")
     subprocess.check_call([sys.executable, "-m", "pip", "install", *missing])
 
 from PIL import Image,ImageTk
-from exif_handler import (
-    add_exif_data,
-    make_exif,
-    read_exif,
-)
+from exif_handler import add_exif_data,make_exif,read_exif
+
 save_folder = None
 path_label = None
 preview_label = None
@@ -58,7 +46,7 @@ cur_preview_image = None
 cur_preview_photo = None
 cur_image_name = ""
 cur_image_ext = ".jpg"
-DEFAULT_FONT_FAMILY = "맑은 고딕"
+defo = "맑은 고딕"
 button_font_configs = {}
 
 #다운로드 저장 경로를 영구적으로 저장해야함.
@@ -95,7 +83,7 @@ def open_save_folder():
     if os.path.exists(folder):
         os.startfile(folder)
     else:
-        messagebox.showwarning("설정된 폴더가 존재하지 않습니다")
+        messagebox.showwarning("폴더가 존재하지 않습니다")
 
 #gpt 도움 받은 부분, 창 크기를 변경할 때 tkinter가 심각할 정도로 끊기는 현상이 있었는데
 #무거운 작업은 별도로 스레드를 할당해서 처리해 뼈대 프로그램에 영향이 없도록 처리했습니다.
@@ -123,6 +111,8 @@ def draw_exif_info():
     if not image_path:
         return
     try:
+        #폰트도 자동다운이 되는지?
+        #11/19 - 안되는거같음
         font_path = r"C:\Windows\Fonts\RIDIBatang.otf"
         if not os.path.exists(font_path):
             font_path = r"C:\Windows\Fonts\malgun.ttf"
@@ -144,7 +134,7 @@ def draw_exif_info():
         for key, title, prompt in required_fields:
             value = simpledialog.askstring(title, prompt)
             if not value:
-                messagebox.showwarning("입력 누락", "모든 정보를 입력해야 합니다.")
+                messagebox.showwarning("모든 정보를 입력해야 합니다.")
                 return
             metadata_inputs[key] = value
     if preview_label:
@@ -171,7 +161,7 @@ def generate_preview(image_path, metadata_inputs, font_path):
                 metadata_inputs["datetime_value"],
             )
         except Exception as exc:
-            raise RuntimeError(f"EXIF 정보를 추가하는 중 문제가 발생했습니다.\n{exc}") from exc
+            raise RuntimeError(f"정보를 추가하는 중 오류가 발생했습니다.\n{exc}") from exc
     try:
         return make_exif(source, output_path=None, font_path=font_path)
     except Exception as exc:
@@ -258,7 +248,7 @@ def update_path(event=None):
         path_label.config(wraplength=max(event.width - 20, 160))
 
 def dynamic_button(button, *, min_size=10, max_size=16, weight="normal"):
-    font_obj = tkfont.Font(family=DEFAULT_FONT_FAMILY, size=max_size, weight=weight)
+    font_obj = font.Font(family=defo, size=max_size, weight=weight)
     button_font_configs[button] = {
         "font": font_obj,
         "min": min_size,
