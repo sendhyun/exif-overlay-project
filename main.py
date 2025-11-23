@@ -12,9 +12,7 @@ import ctypes
 import itertools
 import threading
 from functools import partial
-from tkinter import Tk,Button,Label,Frame,filedialog,messagebox,StringVar,simpledialog
-from tkinter import font 
-
+from tkinter import Tk,Button,Label,Frame,filedialog,messagebox,StringVar,simpledialog,font
 config_file = "config.json"
 #컴퓨터에 이 패키지들이 없다면 설치해야함.
 #참조 https://hwan001.co.kr/119
@@ -30,7 +28,7 @@ if missing:
     subprocess.check_call([sys.executable, "-m", "pip", "install", *missing])
 
 from PIL import Image,ImageTk
-from exif_handler import add_exif_data,make_exif,read_exif
+from exif_overlay import add_exif_data,make_exif,read_exif
 
 save_folder = None
 path_label = None
@@ -229,7 +227,7 @@ def save_preview_image():
     os.makedirs(target_folder, exist_ok=True)
     base_name = cur_image_name or "result"
     ext = cur_image_ext if cur_image_ext.lower() in [".jpg", ".jpeg"] else ".jpg"
-    save_path = os.path.join(target_folder, f"{base_name}_with_text{ext}")
+    save_path = os.path.join(target_folder, f"{base_name}_edit_{ext}")
     save_path = not_same(save_path)
     try:
         cur_preview_image.save(save_path, "JPEG")
