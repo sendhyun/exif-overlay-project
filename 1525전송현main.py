@@ -29,6 +29,14 @@ from fractions import Fraction
 from tkinter import Tk, Button, Label, Frame, filedialog, messagebox, StringVar, simpledialog, font
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 import piexif
+import requests
+from io import BytesIO
+
+def GetImageFromURL(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return Image.open(BytesIO(response.content))
+
 config_file = "config.json"
 
 '''
@@ -37,7 +45,13 @@ config_file = "config.json"
 11-06 최초 git-push
 '''
 logo_dir = os.path.join(os.path.dirname(__file__), "assets", "brands")
-logo_map = {"apple": "apple.png", "samsung": "samsung.png", "sony": "sony.png", "canon": "canon.png", "nikon": "nikon.png"}
+logo_map = {
+    "apple": "apple.png",
+    "samsung": "samsung.png",
+    "sony": "sony.png",
+    "canon": "canon.png",
+    "nikon": "nikon.png",
+}
 default_logo = "default.png"
 default_font = "malgun.ttf"
 exif_fields = ("camera_make", "camera_model", "lens_model", "aperture_value", "shutter_value", "iso_value", "datetime_value")
@@ -126,25 +140,22 @@ def line_info(draw, texts, font, x, start_y, gap, upward=False):
             draw.text((x, y), text, fill="#222222", font=font)
             y += h + gap
 
-def load_logo(img, margin): #gpt 도움받은 부분,asset에 있는 logo 이미지 px값이 제각각이라서, 사진 하단 여백에 맞게 비율을 조정해서 불러왔어야 했습니다.
+def load_logo(img, margin):#gpt 도움받은 부분,asset에 있는 logo 이미지 px값이 제각각이라서, 사진 하단 여백에 맞게 비율을 조정해서 불러왔어야 했습니다.
     try:
         make = normal(piexif.load(img.info.get("exif", b""))["0th"].get(piexif.ImageIFD.Make))
     except Exception:
         make = None
-    filename = next((path for brand, path in logo_map.items() if make and brand in make.lower()), default_logo)
+    filename = next((name for brand, name in logo_map.items() if make and brand in make.lower()), default_logo)
+    url = f"https://raw.githubusercontent.com/sendhyun/exif-overlay-project/main/assets/brands/{filename}"
     try:
-        logo = Image.open(os.path.join(logo_dir, filename)).convert("RGBA")
-    except Exception:
+        logo = GetImageFromURL(url).convert("RGBA")
+    except:
         return None
     max_h = max(margin - 40, 20)
     ratio = min(max_h / logo.height, 1.0)
     size = (int(logo.width * ratio), int(logo.height * ratio))
-    if min(size) <= 0:
-        logo.close()
-        return None
-    resized = logo.resize(size, Image.LANCZOS)
-    logo.close()
-    return resized
+    return logo.resize(size, Image.LANCZOS)
+
 
 EXIF_TAGS = {
     "camera_make": ("0th", piexif.ImageIFD.Make, lambda v: normal(v, to_bytes=True)), "camera_model": ("0th", piexif.ImageIFD.Model, lambda v: normal(v, to_bytes=True)), "lens_model": ("Exif", piexif.ExifIFD.LensModel, lambda v: normal(v, to_bytes=True)),
