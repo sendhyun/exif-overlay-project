@@ -296,6 +296,7 @@ body_frame = None
 root_window = None
 cur_preview_image = None
 cur_preview_photo = None
+resize_after_id = None
 cur_image_name = ""
 cur_image_ext = ".jpg"
 defo = "맑은 고딕"
@@ -441,7 +442,8 @@ def apply_preview(image_path, preview_img, error):
     update_display()
 
 def update_display(event=None):
-    global cur_preview_photo
+    global cur_preview_photo, resize_after_id
+    resize_after_id = None
     if not preview_label or not preview_container:
         return
 
@@ -475,6 +477,14 @@ def update_display(event=None):
     cur_preview_photo = ImageTk.PhotoImage(display)
     preview_label.config(image=cur_preview_photo, text="")
     preview_label.image = cur_preview_photo
+
+def debounced_update_display(event=None):
+    global resize_after_id
+    if not root_window:
+        return
+    if resize_after_id is not None:
+        root_window.after_cancel(resize_after_id)
+    resize_after_id = root_window.after(120, update_display)
 
 def save_preview_image():
     target_folder = save_folder.get()
@@ -638,7 +648,7 @@ def main():
     download_button.grid(row=4, column=0, sticky="nsew", pady=(10, 0))
     dynamic_button(download_button, min_size=11, max_size=18, weight="bold")
     control_frame.bind("<Configure>", update_path)
-    preview_container.bind("<Configure>", update_display)
+    preview_container.bind("<Configure>", debounced_update_display)
     update_display()
     enable_download(False)
     root.mainloop()
