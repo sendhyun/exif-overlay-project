@@ -4,6 +4,16 @@ ctrl+f로 "#gpt"를 검색하시면 gpt 도움 받은 부분 찾으실 수 있�
 #f5f5f5 회색
 할 일 : 멀티스레드 적용
 """
+#중요!!!!
+#Python 3.13(64-bit)환경에서 실행해야 합니다. PIL이 지원XX
+#!!!!!
+#중요!!!!
+#Python 3.13(64-bit)환경에서 실행해야 합니다. PIL이 지원XX
+#!!!!!
+#중요!!!!
+#Python 3.13(64-bit)환경에서 실행해야 합니다. PIL이 지원XX
+#!!!!!
+
 # https://github.com/sendhyun/exif-overlay-project
 import os
 import sys
