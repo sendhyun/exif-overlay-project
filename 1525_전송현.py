@@ -157,12 +157,9 @@ def load_logo(img,margin): #gpt 도움받은 부분,asset에 있는 logo 이미�
 EXIF_TAGS = {
     "camera_make": ("0th",piexif.ImageIFD.Make,lambda v: normal(v,to_bytes=True)),"camera_model": ("0th",piexif.ImageIFD.Model,lambda v: normal(v,to_bytes=True)),"lens_model": ("Exif",piexif.ExifIFD.LensModel,lambda v: normal(v,to_bytes=True)),
     "datetime_value": ("Exif",piexif.ExifIFD.DateTimeOriginal,lambda v: normal(v,to_bytes=True)),"aperture_value": ("Exif",piexif.ExifIFD.FNumber,lambda v: parse(v,"fraction")),
-    "shutter_value": ("Exif",piexif.ExifIFD.ExposureTime,lambda v: parse(v,"fraction")),"iso_value": ("Exif",piexif.ExifIFD.ISOSpeedRatings,lambda v: parse(v,"iso")),
-}
-
+    "shutter_value": ("Exif",piexif.ExifIFD.ExposureTime,lambda v: parse(v,"fraction")),"iso_value": ("Exif",piexif.ExifIFD.ISOSpeedRatings,lambda v: parse(v,"iso")),}
 def load_image(image_source): 
     return (image_source,False) if isinstance(image_source,Image.Image) else (Image.open(image_source),True)
-
 def apply_exif(img,metadata):  
     try:
         exif = piexif.load(img.info.get("exif",b""))
