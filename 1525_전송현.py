@@ -39,7 +39,6 @@ from tkinter import Tk,Button,Label,Frame,filedialog,messagebox,StringVar,simple
 from PIL import Image,ImageTk,ImageDraw,ImageFont
 import piexif
 config_file = "config.json"
-
 '''
 #222222 검정색
 #444444 흰색
