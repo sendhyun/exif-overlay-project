@@ -49,7 +49,6 @@ logo_map = {"apple": "apple.png","samsung": "samsung.png","sony": "sony.png","ca
 default_logo = "default.png"
 default_font = "malgun.ttf"
 exif_fields = ("camera_make","camera_model","lens_model","aperture_value","shutter_value","iso_value","datetime_value")
-
 def normal(value,*,to_bytes=False):  #텍스트 슬라이싱ㅇ
     if value is None:
         return None
